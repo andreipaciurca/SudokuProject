@@ -1,7 +1,7 @@
 # Sudoku Generator Algorithm - Paciurcă Andrei-Alexandru (http://andreipaciurca.github.io)
 from random import randint, shuffle
 
-# Initialise empty 9 by 9 grid
+# initialise empty 9 by 9 grid
 # grid = [[0 for col in range(9)] for row in range(9)]
 grid = [grid[:] for grid in [[0] * 9] * 9]
 
@@ -41,6 +41,23 @@ def getCurrentBox(grid,row,col):
                 else:
                         return [grid[i][6:9] for i in range(6,9)]
 
+
+# A function that checks if a 'value' can be placed in a certain possition
+def possible(value, row, col , grid):
+    # Check that this value has not already be used on this row
+    if (value in grid[row]):
+        return False
+    # Check that this value has not already be used on this column
+    if value in list(val[col] for val in grid):
+        return False
+
+     # Check that this value has not already be used on this 3x3 square
+    square=getCurrentBox(grid,row,col)    
+    if value in (square[0] + square[1] + square[2]):
+        return False
+    # The value is possible
+    return True
+
 # A backtracking/recursive function to check all possible combinations of numbers until a solution is found
 def solveGrid(grid):
     global counter
@@ -51,20 +68,14 @@ def solveGrid(grid):
         if grid[row][col] == 0:
             for value in range (1,10):
                 # Check that this value has not already be used on this row
-                if not(value in grid[row]):
-                    # Check that this value has not already be used on this column
-                    if not value in list(val[col] for val in grid):
-                        # Identify which of the 9 squares we are working on
-                        square=getCurrentBox(grid,row,col)
-                        # Check that this value has not already be used on this 3x3 square
-                        if not value in (square[0] + square[1] + square[2]):
-                            grid[row][col] = value
-                            if checkGrid(grid):
-                                counter += 1
-                                break
-                            else:
-                                if solveGrid(grid):
-                                    return True
+                if possible(value, row, col, grid):
+                    grid[row][col] = value
+                    if checkGrid(grid):
+                        counter += 1
+                        break
+                    else:
+                        if solveGrid(grid):
+                            return True
             break
     grid[row][col] = 0
 
@@ -81,20 +92,13 @@ def fillGrid(grid):
         if grid[row][col] == 0:
             shuffle(numberList)
             for value in numberList:
-                # Check that this value has not already be used on this row
-                if not(value in grid[row]):
-                    # Check that this value has not already be used on this column
-                     if not value in list(val[col] for val in grid):
-                        # Identify which of the 9 squares we are working on
-                        square=getCurrentBox(grid,row,col)
-                        # Check that this value has not already be used on this 3x3 square
-                        if not value in (square[0] + square[1] + square[2]):
-                            grid[row][col] = value
-                            if checkGrid(grid):
-                                return True
-                            else:
-                                if fillGrid(grid):
-                                    return True
+               if possible(value, row, col, grid):
+                    grid[row][col] = value
+                    if checkGrid(grid):
+                        return True
+                    else:
+                        if fillGrid(grid):
+                            return True
             break
     grid[row][col] = 0
 
