@@ -1,8 +1,7 @@
 # Sudoku Generator Algorithm - Paciurcă Andrei-Alexandru (http://andreipaciurca.github.io)
 from random import randint, shuffle
 
-# initialise empty 9 by 9 grid
-# grid = [[0 for col in range(9)] for row in range(9)]
+# Initialise empty 9 by 9 grid
 grid = [grid[:] for grid in [[0] * 9] * 9]
 
 # A function that prints in a 'nice' way a 2d-array
@@ -40,7 +39,6 @@ def getCurrentBox(grid,row,col):
                         return [grid[i][3:6] for i in range(6,9)]
                 else:
                         return [grid[i][6:9] for i in range(6,9)]
-
 
 # A function that checks if a 'value' can be placed in a certain possition
 def possible(value, row, col , grid):
@@ -82,7 +80,7 @@ def solveGrid(grid):
 # A numberList = [1,2,...,9] that will be randomized using shuffle() function from random
 numberList = list(range(1,10))
 
-# A backtracking/recursive function to check all possible combinations of numbers until a solution is found
+# A backtracking/recursive function to check all possible combinations of numbers until a new solution is generated
 def fillGrid(grid):
     global counter
     # Find next empty cell
